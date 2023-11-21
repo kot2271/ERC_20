@@ -119,7 +119,7 @@ describe("ERC20Token contract unit tests", function () {
       it("Should revert if decreased allowance falls below 0", async () => {
         await expect(
           erc20Token.decreaseAllowance(user.address, ONE_ETHER)
-        ).to.be.revertedWith("Decreased allowance below zero");
+        ).to.be.revertedWith("ERC20Token: Decreased allowance below zero");
       });
     });
 
@@ -140,6 +140,12 @@ describe("ERC20Token contract unit tests", function () {
         await expect(
           erc20Token.transfer(user.address, transferAmount)
         ).to.be.revertedWith("ERC20Token: Insufficient balance");
+      });
+
+      it("Should fail if transfer to the zero address", async function () {
+        await expect(
+          erc20Token.transfer(ethers.constants.AddressZero, ONE_ETHER)
+        ).to.be.revertedWith("ERC20Token: Transfer to the zero address");
       });
     });
 
@@ -183,7 +189,7 @@ describe("ERC20Token contract unit tests", function () {
           erc20Token
             .connect(user)
             .transferFrom(owner.address, user.address, FIVE_ETHERS)
-        ).to.be.revertedWith("Transfer amount exceeds allowance");
+        ).to.be.revertedWith("ERC20Token: Transfer amount exceeds allowance");
       });
 
       it("Should revert if transfer amount exceeds balance", async () => {
@@ -202,7 +208,7 @@ describe("ERC20Token contract unit tests", function () {
               user.address,
               ethers.utils.parseEther("2000")
             )
-        ).to.be.revertedWith("Transfer amount exceeds balance");
+        ).to.be.revertedWith("ERC20Token: Transfer amount exceeds balance");
       });
     });
     describe("Mint", async () => {
@@ -221,7 +227,9 @@ describe("ERC20Token contract unit tests", function () {
       it("Should revert if called by non-owner", async () => {
         await expect(
           erc20Token.connect(user).mint(user.address, ONE_ETHER)
-        ).to.be.revertedWith("Only the contract owner can call this function");
+        ).to.be.revertedWith(
+          "ERC20Token: Only the contract owner can call this function"
+        );
       });
     });
 
@@ -245,13 +253,15 @@ describe("ERC20Token contract unit tests", function () {
           erc20Token
             .connect(owner)
             .burn(owner.address, INITIAL_AMOUNT.add(ONE_ETHER))
-        ).to.be.revertedWith("Burn amount exceeds balance");
+        ).to.be.revertedWith("ERC20Token: Burn amount exceeds balance");
       });
 
       it("Should revert if called by non-owner", async () => {
         await expect(
           erc20Token.connect(user).burn(user.address, ONE_ETHER)
-        ).to.be.revertedWith("Only the contract owner can call this function");
+        ).to.be.revertedWith(
+          "ERC20Token: Only the contract owner can call this function"
+        );
       });
     });
   });

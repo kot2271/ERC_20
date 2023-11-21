@@ -36,7 +36,7 @@ contract ERC20Token {
     modifier onlyOwner() {
         require(
             msg.sender == owner,
-            "Only the contract owner can call this function"
+            "ERC20Token: Only the contract owner can call this function"
         );
         _;
     }
@@ -64,7 +64,11 @@ contract ERC20Token {
         address to,
         uint256 amount
     ) public returns (bool success) {
-        require(balanceOf[msg.sender] >= amount, "ERC20Token: Insufficient balance");
+        require(to != address(0), "ERC20Token: Transfer to the zero address");
+        require(
+            balanceOf[msg.sender] >= amount,
+            "ERC20Token: Insufficient balance"
+        );
         balanceOf[msg.sender] -= amount;
         balanceOf[to] += amount;
         emit Transfer(msg.sender, to, amount);
@@ -98,12 +102,15 @@ contract ERC20Token {
     ) public returns (bool success) {
         require(
             amount <= allowance[from][msg.sender],
-            "Transfer amount exceeds allowance"
+            "ERC20Token: Transfer amount exceeds allowance"
         );
-        require(amount <= balanceOf[from], "Transfer amount exceeds balance");
+        require(
+            amount <= balanceOf[from],
+            "ERC20Token: Transfer amount exceeds balance"
+        );
+        allowance[from][msg.sender] -= amount;
         balanceOf[from] -= amount;
         balanceOf[to] += amount;
-        allowance[from][msg.sender] -= amount;
         emit Transfer(from, to, amount);
         return true;
     }
@@ -133,7 +140,7 @@ contract ERC20Token {
     ) public returns (bool success) {
         require(
             allowance[msg.sender][spender] >= subtractedValue,
-            "Decreased allowance below zero"
+            "ERC20Token: Decreased allowance below zero"
         );
         allowance[msg.sender][spender] -= subtractedValue;
         emit Approval(msg.sender, spender, allowance[msg.sender][spender]);
@@ -159,7 +166,10 @@ contract ERC20Token {
      * @param amount The amount of tokens to be burned.
      */
     function burn(address account, uint256 amount) public onlyOwner {
-        require(amount <= balanceOf[account], "Burn amount exceeds balance");
+        require(
+            amount <= balanceOf[account],
+            "ERC20Token: Burn amount exceeds balance"
+        );
         totalSupply -= amount;
         balanceOf[account] -= amount;
         emit Transfer(account, address(0), amount);

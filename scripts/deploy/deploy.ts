@@ -1,5 +1,5 @@
 import { getNamedAccounts, deployments } from "hardhat";
-import { verify } from "./helpers/verify";
+import { verify } from "../helpers/verify";
 
 const TOKEN_NAME = "ERC20Token";
 const TOKEN_SYMBOL = "E20T";
