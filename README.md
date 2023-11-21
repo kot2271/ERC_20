@@ -1,5 +1,7 @@
 # ERC20Token
 
+[![Mumbai](https://img.shields.io/badge/check_the_contract_in_mumbai.polygonscan-9966cc?style=flat&logo=ethereum)](https://mumbai.polygonscan.com/address/0x60EA3A51E59520b508C9F1EfaeDA0a8CcFbE3C53)
+
 ## Installation
 
 Clone the repository using the following command:
@@ -14,7 +16,7 @@ Fill in all the required environment variables(copy .env-example to .env and fil
 
 Deploy contract to the chain (polygon-mumbai):
 ```shell
-npx hardhat run scripts/deploy.ts --network polygonMumbai
+npx hardhat run scripts/deploy/deploy.ts --network polygonMumbai
 ```
 
 ## Verify
